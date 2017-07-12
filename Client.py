@@ -1,0 +1,1 @@
+# Proxy object used by IMServer to represent the IMClients that are connected

@@ -1,0 +1,1 @@
+# ChatRoom object that holds various Client objects on server-side

@@ -1,0 +1,1 @@
+# Manages ChatRooms and IMClient network requests
