@@ -14,9 +14,10 @@ class IMClient:
 		self.username = ""
 		self.curChatRoom = ""
 		self.host = '127.0.0.1' # TODO Update design documents to show this variable
-		self.input = ""
+		self.input = Queue() # TODO Update design to make variable equal Queue
 		self.port = 12345
 		self.sock = None # TODO Update design documents to show this variable
+		self.startLoop()
 
 	def initConnection(self):
 		# TODO Update document to remove ip from method header
@@ -29,27 +30,43 @@ class IMClient:
 			remote_ip = socket.gethostbyname(self.host)
 		except socket.gaierror:
 			print 'Hosetname could not be resolved. Exiting'
-			sys.exit()
+			return False
 		s.connect((remote_ip, self.port))
 
 		print 'Socket Connected to ' + self.host #+ ' on ip ' + remote_ip
+		return True
 	
 	def updateChat(self, newMessage):
 		raise NotImplementedError 
 	
 	def listenForInput(self):
-		message_ready = False 
-		input, message_ready 
-		input = raw_input("> ")
-		message_ready = True
+		input.put(raw_input("> "))
 	
-	def sendInput(self, messtoSend):
+	def sendInput(self):
+		# TODO Update method header
 		try: 
-			self.sock.sendall(self.username + ':' + messtoSend)
+			self.sock.sendall(self.username + ':' + self.input.get())
 		except socket.error:
 			print 'Send failed'
 		return true
-
+	
+	def startLoop(self):
+		queueHandler = threading._start_new_thread(mainLoop, ())
+		return
+	
+	def mainLoop(self):
+		while True:
+			# message = str(raw_input("Type something: "))
+			# send_message(message, sock)
+			if self.input.empty() is not True:
+				# global input, message_ready
+				listener = threading._start_new_thread(get_input, ())
+				sendInput()
+			receive = select.select([sock], [], [], 0.005)
+			# Only check the rlist
+			if receive[0]:
+				message = sock.recv(4096) # TODO update this
+				print message
 
 
 
