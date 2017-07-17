@@ -3,43 +3,45 @@
 # connectedClients when a new entry in ther queue is detected
 
 from Client import Client
-from queue import Queue
+from Queue import Queue
+import threading
 
 
 class ChatRoom:
 	
-	def __init__(self):
+	def __init__(self, name):
 		self.chatRoomRunning = True
-		self.name = ""
+		self.name = name
 		self.clientsConnected = []
-		self.messageQueue = []
+		self.messageQueue = Queue()
 		self.startLoop()
 
 	def newClient(self, newClient):
 		''' called by IMServer, newClient is of type Client '''
 		self.clientsConnected.append(newClient)
-		return 
 
 	def newMessage(self, messageIn, clientName):
 		''' called by the Client object '''
 		newMessage = clientName + " : " + messageIn
 		self.messageQueue.put(newMessage)
+		print newMessage
 		return
 	
 	def updateConnectedClients(self, messageIn):
-		# loop through all clients updating them 
-		for client in clientsConnected:
-			client.sendMessageUpdate(messageIn)
+		print len(self.clientsConnected)
+		# loop through all clients updating them
+		for client in self.clientsConnected:
+			client.sendMessageUpdateToIMClient(messageIn)
 		return
 	
 	def startLoop(self):
 		''' Is called once ChatRoom is initted '''
-		queueHandler = threading._start_new_thread(mainLoop, ())
+		queueHandler = threading._start_new_thread(self.mainLoop, ())
 		return
 
 	def mainLoop(self):
-		# get is blocking by default (yay) 
+		# get is blocking by default (yay)
 		while self.chatRoomRunning:
-			messToBroadcast = messageQueue.get()
+			messToBroadcast = self.messageQueue.get()
 			self.updateConnectedClients(messToBroadcast)
 		return 
