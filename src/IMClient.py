@@ -24,7 +24,7 @@ class IMClient:
 		# TODO Update document to remove ip from method header
 		try: 
 			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			# socket.AF_INET IPV4 and socket.SOCK_STREAM is TCP
+			# socket.AF_INET is IPV4 and socket.SOCK_STREAM is TCP
 		except socket.error, msg: 
 			print 'Failed to create socket: ' + str(msg[1])
 		try: 
@@ -38,7 +38,7 @@ class IMClient:
 		return True
 	
 	def updateChat(self, newMessage):
-		raise NotImplementedError 
+		print newMessage
 	
 	def listenForInput(self):
 		while True:
@@ -73,7 +73,7 @@ class IMClient:
 			# Only check the rlist
 			if receive[0]:
 				message = self.sock.recv(4096) # TODO update this
-				print message
+				updateChat(message)
 
 if __name__ == "__main__":
 	IMClient()
