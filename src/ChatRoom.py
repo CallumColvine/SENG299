@@ -22,7 +22,7 @@ class ChatRoom:
 
 	def removeClient(self, newClient):
 		if newClient in self.clientsConnected:
-			clientsConnected.remove(newClient)
+			self.clientsConnected.remove(newClient)
 		
 	def updateConnectedClients(self, messageIn):
 		# loop through all clients updating them

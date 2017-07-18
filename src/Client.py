@@ -75,7 +75,7 @@ class Client:
 				if self.chatRoomHandler.findChatRoom(chat).name == chat:
 					self.changeChatRoom(chat)
 			elif self.helpCommand(messageIn):
-				sendMessageUpdateToIMClient(helpMessage)
+				self.sendMessageUpdateToIMClient(self.helpMessage)
 				#send user help specs
 		else:
 			newMessage = clientName + " : " + messageIn
