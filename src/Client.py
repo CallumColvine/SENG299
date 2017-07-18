@@ -10,14 +10,15 @@ from time import gmtime, strftime
 # 	writeMessage() calls the ChatRoom.newMessage() function
 class Client:
 
-	def __init__(self, sock, addr, room, chatRoomHandler):
+	def __init__(self, sock, addr, room, chatRoomHandler, name):
 		# This uses self.sock instead now
 		# self.ip = ""
 		# self.port = -1
+		
 		self.sock = sock
 		self.addr = addr
 		self.curChat = room # I dont know if this is entirely valid
-		self.name = "tempname"
+		self.name = name
 		self.chatRoomHandler = chatRoomHandler
 		self.startLoop()
 		self.helpMessage = "/help - will provide the possible command | /switch chatroomName - switch to given chatroomName | Chat Rooms Available : General and Random"

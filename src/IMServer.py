@@ -2,6 +2,7 @@ import Queue
 import select
 import socket
 import sys
+import random
 from ChatRoomHandler import ChatRoomHandler
 from Client import Client
 from threading import Thread
@@ -17,6 +18,8 @@ class IMServer:
 		# I changed this into a dict so that it could be something like this general:General's Chatroom Object
 		# ToDo: Delete when sure it unnecessary
 		# self.chatRooms = {}
+		self.clientAdjectivesList = open('Adjectives.txt').read().splitlines() 
+		self.clientNounsList = open('Nouns.txt').read().splitlines() 
 		self.connectedClients = []
 		self.HOST = ''
 		self.PORT = 12345
@@ -83,7 +86,8 @@ class IMServer:
 
 	# This was changed from clientName, clientIP and clientPort
 	def addNewClient(self, sock, addr, roomName):
-		client = Client(sock, addr, None, self.chatRoomHandler)
+		clientName = random.choice(self.clientAdjectivesList)+" "+random.choice(self.clientNounsList)
+		client = Client(sock, addr, None, self.chatRoomHandler, clientName)
 		# ToDo: Delete when sure it unnecessary
 		# self.chatRooms["General"].newClient(client)
 		chatRoomObj = self.chatRoomHandler.addClient(roomName, client)
