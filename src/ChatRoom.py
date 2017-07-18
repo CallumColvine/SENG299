@@ -23,8 +23,8 @@ class ChatRoom:
 		self.clientsConnected.append(newClient)
 		""" TODO lock thread till the following messages are sent to the client. 
 		    TODO Fix spacing of output"""
-		newClient.sendMessageUpdateToIMClient("Welcome to " + self.name + " \n")
-		newClient.sendMessageUpdateToIMClient("Your username is " + newClient.name + "\n")
+		newClient.sendMessageUpdateToIMClient("\nWelcome to " + self.name + " \n")
+		newClient.sendMessageUpdateToIMClient("Your username is " + newClient.name + "\n\n")
 		if len(self.clientsConnected) > 1:
 			newClient.sendMessageUpdateToIMClient("The following users are also connected: \n")
 			for client in self.clientsConnected:
