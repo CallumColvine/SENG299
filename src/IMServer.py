@@ -83,7 +83,7 @@ class IMServer:
 
 	# This was changed from clientName, clientIP and clientPort
 	def addNewClient(self, sock, addr, roomName):
-		client = Client(sock, addr, None)
+		client = Client(sock, addr, None, self.chatRoomHandler)
 		# ToDo: Delete when sure it unnecessary
 		# self.chatRooms["General"].newClient(client)
 		chatRoomObj = self.chatRoomHandler.addClient(roomName, client)

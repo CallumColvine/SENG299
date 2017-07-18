@@ -10,7 +10,7 @@ from time import gmtime, strftime
 # 	writeMessage() calls the ChatRoom.newMessage() function
 class Client:
 
-	def __init__(self, sock, addr, room):
+	def __init__(self, sock, addr, room, chatRoomHandler):
 		# This uses self.sock instead now
 		# self.ip = ""
 		# self.port = -1
@@ -18,6 +18,7 @@ class Client:
 		self.addr = addr
 		self.curChat = room # I dont know if this is entirely valid
 		self.name = "tempname"
+		self.chatRoomHandler = chatRoomHandler
 		self.startLoop()
 
 	# TODO Changed name of this as well
@@ -39,3 +40,8 @@ class Client:
 	# TODO I updated the name of this as well and it doesn't return anything as well
 	def sendMessageUpdateToIMClient(self, newMessage):
 		self.sock.send(newMessage)
+
+	def changeChatRoom(self, newRoomName):
+		newRoom = self.chatRoomHandler.changeChatRoom(newRoomName, self.curChat.name)
+		self.curChat = newRoom
+		return

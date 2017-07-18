@@ -14,17 +14,13 @@ class ChatRoomHandler(object):
 
 	def addClient(self, roomName, clientObj):
 		''' Returns the ChatRoom obj so the Client can keep reference to it '''
-		for room in self.chatRoomList:
-			if room.name == roomName:
-				room.newClient(clientObj)
-				return room
-		print "ChatRoomHandler: unable to find specified ChatRoom", roomName
-		return None
+		room = self.findChatRoom(roomName)
+		room.newClient(clientObj)
+		return room
 
 	def removeClient(self, roomName):
-		for room in self.chatRoomList:
-			if room.name == roomName:
-				room.newClient(clientObj)		
+		room = self.findChatRoom(roomName)
+		room.newClient(clientObj)		
 		return
 
 	def createChatRoom(self, roomName):
@@ -36,4 +32,16 @@ class ChatRoomHandler(object):
 		tempRoom = ChatRoom(roomName)
 		self.chatRoomList.append(tempRoom)
 		return
+
+	def findChatRoom(self, roomName):
+		for room in self.chatRoomList:
+			if room.name == roomName:
+				return room
+		print "ChatRoomHandler: unable to find specified ChatRoom", roomName
+		return None
+
+	def changeChatRoom(self, newRoomName, oldRoomName):
+		self.removeClient(oldRoomName)
+		room = self.addClient(newRoomName)
+		return room
 
