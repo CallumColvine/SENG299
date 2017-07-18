@@ -65,7 +65,7 @@ class Client:
 		return
 
 	def serverShutdown(self, message):
-		if message.split(' ', 1)[0] == "/servershutdown":
+		if message.split(' ', 1)[0] == "/servershutdown" or message.split(' ', 1)[0] == "/shutdownserver":
 			return True
 		return False
 
