@@ -91,7 +91,7 @@ class IMServer:
 		# ToDo: Delete when sure it unnecessary
 		# self.chatRooms["General"].newClient(client)
 		chatRoomObj = self.chatRoomHandler.addClient(roomName, client)
-		client.curChat = chatRoomObj
+		client.chatroom = chatRoomObj
 		return 
 
 	@staticmethod

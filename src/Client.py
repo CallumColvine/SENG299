@@ -14,7 +14,7 @@ class Client:
 
 		self.sock = sock
 		self.addr = addr
-		self.curChat = room # I dont know if this is entirely valid
+		self.chatroom = room # I dont know if this is entirely valid
 		self.name = name
 		self.chatRoomHandler = chatRoomHandler
 		self.startLoop()
@@ -45,11 +45,12 @@ class Client:
 			# send user help specs
 			elif self.serverShutdown(messageIn):
 				self.chatRoomHandler.shutdownClients()
-				newMessage = ""
+			elif self.requestingUsers(messageIn):
+				self.chatroom.listUsers(self)
 		else:
 			newMessage = self.name + " : " + messageIn
-			self.curChat.messageQueue.put(newMessage)
-			print "(%s) %s" % (self.curChat.name, newMessage)
+			self.chatroom.messageQueue.put(newMessage)
+			print "(%s) %s" % (self.chatroom.name, newMessage)
 
 	# TODO I updated the name of this as well and it doesn't return anything as well
 	def sendMessageUpdateToIMClient(self, newMessage):
@@ -60,8 +61,8 @@ class Client:
 		self.sendMessageUpdateToIMClient("/exit")
 
 	def changeChatRoom(self, newRoomName):
-		newRoom = self.chatRoomHandler.changeChatRoom(newRoomName, self.curChat.name, self)
-		self.curChat = newRoom
+		newRoom = self.chatRoomHandler.changeChatRoom(newRoomName, self.chatroom.name, self)
+		self.chatroom = newRoom
 		return
 
 	def serverShutdown(self, message):
@@ -86,6 +87,10 @@ class Client:
 
 	def userJoining(self, message):
 		if message.split(" ")[0] == "/announce":
+			return True
+
+	def requestingUsers(self, message):
+		if message.split(" ")[0] == "/users":
 			return True
 
 
