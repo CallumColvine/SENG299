@@ -25,13 +25,10 @@ class Client:
 		while True:
 			receive = select.select([self.sock], [], [])
 			message = self.sock.recv(4096)
-			print "msg received"
 			Thread(target=self.writeMessageToChatRoom, args=(message,)).start()
-			# threading._start_new_thread(self.writeMessageToChatRoom, (message,))
 
 
 	def startLoop(self):
-		# queueHandler = threading._start_new_thread(self.listenForMessageFromIMClient(), ())
 		queueHandler = Thread(target=self.listenForMessageFromIMClient, args=()).start()
 
 

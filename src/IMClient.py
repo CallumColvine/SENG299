@@ -18,6 +18,7 @@ class IMClient:
 		self.port = 12345
 		self.sock = None # TODO Update design documents to show this variable
 		self.initConnection()
+		self.announce()
 		self.startLoop()
 
 	def initConnection(self):
@@ -36,6 +37,9 @@ class IMClient:
 
 		print 'Socket Connected to ' + self.host #+ ' on ip ' + remote_ip
 		return True
+
+	def announce(self):
+		self.sock.sendall("/announce " + self.username + " has connected to the chat room")
 	
 	def updateChat(self, newMessage):
 		print newMessage
@@ -48,16 +52,14 @@ class IMClient:
 	def sendInput(self):
 		# TODO Update method header
 		try: 
-			self.sock.sendall(self.username + ':' + self.input.get())
+			self.sock.sendall(self.input.get())
 		except socket.error:
 			print 'Send failed'
 			return False
 		return True
 
 	def startLoop(self):
-		# queueHandler = threading._start_new_thread(self.mainLoop, ())
 		Thread(target=self.mainLoop).start()
-		# test = threading._start_new_thread(self.listenForInput(), ())
 		Thread(target=self.listenForInput).start()
 
 	def mainLoop(self):
