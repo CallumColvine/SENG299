@@ -20,27 +20,6 @@ class ChatRoom:
 		''' called by IMServer, newClient is of type Client '''
 		self.clientsConnected.append(newClient)
 
-	def specialMessage(self, message):
-		if message[0] is '/':
-			return True
-
-	def ignoreFirstWord(self, message):
-		return message.split(' ', 1)[1]
-
-	def userJoining(self, message):
-		if message.split(" ")[0] == "/announce":
-			return True
-
-	def newMessage(self, messageIn, clientName):
-		''' called by the Client object '''
-		if self.specialMessage(messageIn):
-			if self.userJoining(messageIn):
-				newMessage = clientName + self.ignoreFirstWord(messageIn)
-		else:
-			newMessage = clientName + " : " + messageIn
-		self.messageQueue.put(newMessage)
-		print "(%s) %s" % (self.name, newMessage)
-
 	def updateConnectedClients(self, messageIn):
 		# loop through all clients updating them
 		for client in self.clientsConnected:

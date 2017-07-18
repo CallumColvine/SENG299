@@ -20,6 +20,7 @@ class Client:
 		self.name = "tempname"
 		self.chatRoomHandler = chatRoomHandler
 		self.startLoop()
+		self.helpMessage = "/help - will provide the possible command | /switch chatroomName - switch to given chatroomName | Chat Rooms Available : General and Random"
 
 	# TODO Changed name of this as well
 	def listenForMessageFromIMClient(self):
@@ -27,7 +28,6 @@ class Client:
 			receive = select.select([self.sock], [], [])
 			message = self.sock.recv(4096)
 			Thread(target=self.writeMessageToChatRoom, args=(message,)).start()
-
 
 	def startLoop(self):
 		queueHandler = Thread(target=self.listenForMessageFromIMClient, args=()).start()
@@ -45,3 +45,40 @@ class Client:
 		newRoom = self.chatRoomHandler.changeChatRoom(newRoomName, self.curChat.name)
 		self.curChat = newRoom
 		return
+	
+	def specialMessage(self, message):
+		if message[0] is '/':
+			return True
+
+	def ignoreFirstWord(self, message):
+		return message.split(' ', 1)[1]
+		
+	def switchCommand(self, message):
+		if message.split(" ")[0] == "/switch"
+			return True
+			
+	def helpCommand(self, message):
+		if message.split(" ")[0] == "/help"
+			return True
+	
+	def userJoining(self, message):
+		if message.split(" ")[0] == "/announce":
+			return True
+
+	def newMessage(self, messageIn, clientName):
+		''' called by the Client object '''
+		if self.specialMessage(messageIn):
+			if self.userJoining(messageIn):
+				newMessage = clientName + self.ignoreFirstWord(messageIn)
+			else if self.switchCommand(messageIn):
+				chat = message.split(" ")[1]
+				if self.chatRoomHandler.findChatRoom(chat) == chat:
+					self.changeChatRoom(chat)
+			else if self.helpCommand(messageIn):
+				sendMessageUpdateToIMClient(helpMessage)
+				#send user help specs
+		else:
+			newMessage = clientName + " : " + messageIn
+		self.messageQueue.put(newMessage)
+		print "(%s) %s" % (self.name, newMessage)
+
