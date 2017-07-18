@@ -19,8 +19,17 @@ class ChatRoom:
 	def newClient(self, newClient):
 		''' called by IMServer, newClient is of type Client '''
 		self.clientsConnected.append(newClient)
-		newClient.sendMessageUpdateToIMClient("Welcome to " + self.name)
-
+		""" TODO lock thread till the following messages are sent to the client. 
+		    TODO Fix spacing of output"""
+		newClient.sendMessageUpdateToIMClient("Welcome to " + self.name + " \n")
+		if len(self.clientsConnected) > 1:
+			newClient.sendMessageUpdateToIMClient("The following users are also connected: \n")
+			for client in self.clientsConnected:
+				if client is not newClient:
+					newClient.sendMessageUpdateToIMClient(client.name + "\n" )
+		else:
+			newClient.sendMessageUpdateToIMClient("You are the first user in this chatroom \n")
+	
 	def removeClient(self, newClient):
 		if newClient in self.clientsConnected:
 			self.clientsConnected.remove(newClient)
