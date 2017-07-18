@@ -20,6 +20,10 @@ class ChatRoom:
 		''' called by IMServer, newClient is of type Client '''
 		self.clientsConnected.append(newClient)
 
+	def removeClient(self, newClient):
+		if newClient in self.clientsConnected:
+			clientsConnected.remove(newClient)
+		
 	def updateConnectedClients(self, messageIn):
 		# loop through all clients updating them
 		for client in self.clientsConnected:

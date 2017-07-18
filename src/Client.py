@@ -32,17 +32,16 @@ class Client:
 	def startLoop(self):
 		queueHandler = Thread(target=self.listenForMessageFromIMClient, args=()).start()
 
-
 	# TODO I updated the name of this to be clearer
 	def writeMessageToChatRoom(self, messageIn):
-		self.curChat.newMessage(messageIn, self.name)
+		self.newMessage(messageIn, self.name)
 
 	# TODO I updated the name of this as well and it doesn't return anything as well
 	def sendMessageUpdateToIMClient(self, newMessage):
 		self.sock.send(newMessage)
 
 	def changeChatRoom(self, newRoomName):
-		newRoom = self.chatRoomHandler.changeChatRoom(newRoomName, self.curChat.name)
+		newRoom = self.chatRoomHandler.changeChatRoom(newRoomName, self.curChat.name, self)
 		self.curChat = newRoom
 		return
 	
@@ -54,11 +53,11 @@ class Client:
 		return message.split(' ', 1)[1]
 		
 	def switchCommand(self, message):
-		if message.split(" ")[0] == "/switch"
+		if message.split(" ")[0] == "/switch":
 			return True
 			
 	def helpCommand(self, message):
-		if message.split(" ")[0] == "/help"
+		if message.split(" ")[0] == "/help":
 			return True
 	
 	def userJoining(self, message):
@@ -67,18 +66,19 @@ class Client:
 
 	def newMessage(self, messageIn, clientName):
 		''' called by the Client object '''
+		newMessage = ""
 		if self.specialMessage(messageIn):
 			if self.userJoining(messageIn):
 				newMessage = clientName + self.ignoreFirstWord(messageIn)
-			else if self.switchCommand(messageIn):
-				chat = message.split(" ")[1]
-				if self.chatRoomHandler.findChatRoom(chat) == chat:
+			elif self.switchCommand(messageIn):
+				chat = messageIn.split(" ")[1]
+				if self.chatRoomHandler.findChatRoom(chat).name == chat:
 					self.changeChatRoom(chat)
-			else if self.helpCommand(messageIn):
+			elif self.helpCommand(messageIn):
 				sendMessageUpdateToIMClient(helpMessage)
 				#send user help specs
 		else:
 			newMessage = clientName + " : " + messageIn
-		self.messageQueue.put(newMessage)
-		print "(%s) %s" % (self.name, newMessage)
+			self.curChat.messageQueue.put(newMessage)
+			print "(%s) %s" % (self.curChat.name, newMessage)
 

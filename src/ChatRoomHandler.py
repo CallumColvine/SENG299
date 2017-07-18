@@ -18,9 +18,9 @@ class ChatRoomHandler(object):
 		room.newClient(clientObj)
 		return room
 
-	def removeClient(self, roomName):
+	def removeClient(self, roomName, clientObj):
 		room = self.findChatRoom(roomName)
-		room.newClient(clientObj)		
+		room.removeClient(clientObj)		
 		return
 
 	def createChatRoom(self, roomName):
@@ -40,8 +40,8 @@ class ChatRoomHandler(object):
 		print "ChatRoomHandler: unable to find specified ChatRoom", roomName
 		return None
 
-	def changeChatRoom(self, newRoomName, oldRoomName):
-		self.removeClient(oldRoomName)
-		room = self.addClient(newRoomName)
+	def changeChatRoom(self, newRoomName, oldRoomName, clientObj):
+		self.removeClient(oldRoomName, clientObj)
+		room = self.addClient(newRoomName, clientObj)
 		return room
 
