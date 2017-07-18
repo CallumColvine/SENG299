@@ -2,6 +2,7 @@
 
 """ Initializes connections with IMServer with initConnection()
 These connections are passed on to a Client object which is managed by IMServer  """
+import os
 import select
 import socket
 import sys 
@@ -42,7 +43,13 @@ class IMClient:
 		self.sock.sendall("/announce " + self.username + " has connected to the chat room")
 	
 	def updateChat(self, newMessage):
-		print newMessage
+		if len(newMessage) > 0:
+			if self.shutdownMessage(newMessage):
+				print "Good Bye!"
+				os._exit(0)
+				# sys.exit()
+			else:
+				print newMessage
 	
 	def listenForInput(self):
 		while True:
@@ -76,6 +83,11 @@ class IMClient:
 			if receive[0]:
 				message = self.sock.recv(4096) # TODO update this
 				self.updateChat(message)
+
+	def shutdownMessage(self, message):
+		if message.split(' ', 1)[0] == "/exit":
+			return True
+		return False
 
 if __name__ == "__main__":
 	IMClient()

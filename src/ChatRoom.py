@@ -4,7 +4,9 @@
 
 from Client import Client
 from Queue import Queue
-import threading
+from threading import Thread
+import os
+import time
 
 
 class ChatRoom:
@@ -30,11 +32,11 @@ class ChatRoom:
 					newClient.sendMessageUpdateToIMClient(client.name + "\n" )
 		else:
 			newClient.sendMessageUpdateToIMClient("You are the first user in this chatroom \n")
-	
+
 	def removeClient(self, newClient):
 		if newClient in self.clientsConnected:
 			self.clientsConnected.remove(newClient)
-		
+
 	def updateConnectedClients(self, messageIn):
 		# loop through all clients updating them
 		for client in self.clientsConnected:
@@ -42,7 +44,7 @@ class ChatRoom:
 
 	def startLoop(self):
 		''' Is called once ChatRoom is initted '''
-		queueHandler = threading._start_new_thread(self.mainLoop, ())
+		queueHandler = Thread(target=self.mainLoop, args=()).start()
 		return
 
 	def mainLoop(self):
@@ -50,4 +52,10 @@ class ChatRoom:
 		while self.chatRoomRunning:
 			messToBroadcast = self.messageQueue.get()
 			self.updateConnectedClients(messToBroadcast)
-		return 
+		return
+
+
+
+
+
+

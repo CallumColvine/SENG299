@@ -1,5 +1,6 @@
 from ChatRoom import ChatRoom
-
+import os
+import time
 
 class ChatRoomHandler(object):
 
@@ -28,7 +29,6 @@ class ChatRoomHandler(object):
 		for room in self.chatRoomList:
 			if room.name == roomName:
 				return
-		print "Appending lists"
 		tempRoom = ChatRoom(roomName)
 		self.chatRoomList.append(tempRoom)
 		return
@@ -45,3 +45,15 @@ class ChatRoomHandler(object):
 		room = self.addClient(newRoomName, clientObj)
 		return room
 
+	def shutdownClients(self):
+		for chatroom in self.chatRoomList:
+			chatroom.messageQueue.put("Server shutting down")
+		for i in xrange(10, 0, -1):
+			for chatroom in self.chatRoomList:
+				chatroom.messageQueue.put(str(i) + "...")
+			time.sleep(1)
+		for chatroom in self.chatRoomList:
+			for client in chatroom.clientsConnected:
+				client.shutdown()
+				# Thread(target=client.shutdown()).start
+		os._exit(0)  # This doesn't work currently,

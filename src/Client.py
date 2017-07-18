@@ -41,26 +41,35 @@ class Client:
 	def sendMessageUpdateToIMClient(self, newMessage):
 		self.sock.send(newMessage)
 
+	# TODO This is new
+	def shutdown(self):
+		self.sendMessageUpdateToIMClient("/exit")
+
 	def changeChatRoom(self, newRoomName):
 		newRoom = self.chatRoomHandler.changeChatRoom(newRoomName, self.curChat.name, self)
 		self.curChat = newRoom
 		return
-	
+
+	def serverShutdown(self, message):
+		if message.split(' ', 1)[0] == "/servershutdown":
+			return True
+		return False
+
 	def specialMessage(self, message):
 		if message[0] is '/':
 			return True
 
 	def ignoreFirstWord(self, message):
 		return message.split(' ', 1)[1]
-		
+
 	def switchCommand(self, message):
 		if message.split(" ")[0] == "/switch":
 			return True
-			
+
 	def helpCommand(self, message):
 		if message.split(" ")[0] == "/help":
 			return True
-	
+
 	def userJoining(self, message):
 		if message.split(" ")[0] == "/announce":
 			return True
@@ -78,6 +87,9 @@ class Client:
 			elif self.helpCommand(messageIn):
 				self.sendMessageUpdateToIMClient(self.helpMessage)
 				#send user help specs
+			elif self.serverShutdown(messageIn):
+				self.chatRoomHandler.shutdownClients()
+				newMessage = ""
 		else:
 			newMessage = clientName + " : " + messageIn
 			self.curChat.messageQueue.put(newMessage)
