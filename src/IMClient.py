@@ -75,7 +75,7 @@ class IMClient:
 			# Only check the rlist
 			if receive[0]:
 				message = self.sock.recv(4096) # TODO update this
-				updateChat(message)
+				self.updateChat(message)
 
 if __name__ == "__main__":
 	IMClient()

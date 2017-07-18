@@ -2,7 +2,7 @@ import Queue
 import select
 import socket
 import sys
-from ChatRoom import ChatRoom
+from ChatRoomHandler import ChatRoomHandler
 from Client import Client
 from threading import Thread
 from time import gmtime, strftime
@@ -15,7 +15,8 @@ class IMServer:
 	def __init__(self):
 		# TODO REVIEW THIS
 		# I changed this into a dict so that it could be something like this general:General's Chatroom Object
-		self.chatRooms = {}
+		# ToDo: Delete when sure it unnecessary
+		# self.chatRooms = {}
 		self.connectedClients = []
 		self.HOST = ''
 		self.PORT = 12345
@@ -38,24 +39,29 @@ class IMServer:
 		self.outputs = []
 		# Each connection gets its own message queue
 		# self.message_queues = {}
-		self.createDefaultChatRooms()
+		# ToDo: Delete when sure it unnecessary
+		# self.createDefaultChatRooms()
+		self.chatRoomHandler = ChatRoomHandler()
 		self.startLoop()
+		return
 
 
+	# ToDo: Delete when sure it unnecessary	
 	# TODO this is a new function
-	def createDefaultChatRooms(self):
-		self.chatRooms["General"] = ChatRoom("General")
-		self.chatRooms["Random"] = ChatRoom("Random")
+	# def createDefaultChatRooms(self):
+	# 	self.chatRooms["General"] = ChatRoom("General")
+	# 	self.chatRooms["Random"] = ChatRoom("Random")
 
 
-	# Add support for custom chatrooms
-	def createChatRoom(self, roomName):
-		# general = ChatRoom("General")
-		# self.chatRooms.append(general)
-		# random = ChatRoom("Random")
-		# self.chatRooms.append(random)
+	# ToDo: Delete when sure it unnecessary
+	# # Add support for custom chatrooms
+	# def createChatRoom(self, roomName):
+	# 	# general = ChatRoom("General")
+	# 	# self.chatRooms.append(general)
+	# 	# random = ChatRoom("Random")
+	# 	# self.chatRooms.append(random)
 
-		raise NotImplementedError
+	# 	raise NotImplementedError
 
 	def startLoop(self):
 		# threading._start_new_thread(self.listenForConnections())
@@ -72,12 +78,17 @@ class IMServer:
 					# accept the connection
 					conn, addr = sock.accept()
 					conn.setblocking(0)
-					self.addNewClient(conn, addr, self.chatRooms["General"])
+					self.addNewClient(conn, addr, "General")
+		return
 
 	# This was changed from clientName, clientIP and clientPort
-	def addNewClient(self, sock, addr, room):
-		client = Client(sock, addr, room)
-		self.chatRooms["General"].newClient(client)
+	def addNewClient(self, sock, addr, roomName):
+		client = Client(sock, addr, None)
+		# ToDo: Delete when sure it unnecessary
+		# self.chatRooms["General"].newClient(client)
+		chatRoomObj = self.chatRoomHandler.addClient(roomName, client)
+		client.curChat = chatRoomObj
+		return 
 
 	@staticmethod
 	def bind(sock, host, port):
