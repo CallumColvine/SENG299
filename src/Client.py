@@ -6,15 +6,12 @@ from time import gmtime, strftime
 
 # One-to-one relationship with IMClients
 # Constantly listening for new messages broadcast by the IMClient
-# 	Calls its writeMessage() function when a new message is received 
+# 	Calls its writeMessageToChatRoom() function when a new message is received
 # 	writeMessage() calls the ChatRoom.newMessage() function
 class Client:
 
 	def __init__(self, sock, addr, room, chatRoomHandler, name):
-		# This uses self.sock instead now
-		# self.ip = ""
-		# self.port = -1
-		
+
 		self.sock = sock
 		self.addr = addr
 		self.curChat = room # I dont know if this is entirely valid
@@ -35,7 +32,24 @@ class Client:
 
 	# TODO I updated the name of this to be clearer
 	def writeMessageToChatRoom(self, messageIn):
-		self.newMessage(messageIn, self.name)
+		newMessage = ""
+		if self.specialMessage(messageIn):
+			if self.userJoining(messageIn):
+				newMessage = self.name + self.ignoreFirstWord(messageIn)
+			elif self.switchCommand(messageIn):
+				chat = messageIn.split(" ")[1]
+				if self.chatRoomHandler.findChatRoom(chat).name == chat:
+					self.changeChatRoom(chat)
+			elif self.helpCommand(messageIn):
+				self.sendMessageUpdateToIMClient(self.helpMessage)
+			# send user help specs
+			elif self.serverShutdown(messageIn):
+				self.chatRoomHandler.shutdownClients()
+				newMessage = ""
+		else:
+			newMessage = self.name + " : " + messageIn
+			self.curChat.messageQueue.put(newMessage)
+			print "(%s) %s" % (self.curChat.name, newMessage)
 
 	# TODO I updated the name of this as well and it doesn't return anything as well
 	def sendMessageUpdateToIMClient(self, newMessage):
@@ -74,24 +88,4 @@ class Client:
 		if message.split(" ")[0] == "/announce":
 			return True
 
-	def newMessage(self, messageIn, clientName):
-		''' called by the Client object '''
-		newMessage = ""
-		if self.specialMessage(messageIn):
-			if self.userJoining(messageIn):
-				newMessage = clientName + self.ignoreFirstWord(messageIn)
-			elif self.switchCommand(messageIn):
-				chat = messageIn.split(" ")[1]
-				if self.chatRoomHandler.findChatRoom(chat).name == chat:
-					self.changeChatRoom(chat)
-			elif self.helpCommand(messageIn):
-				self.sendMessageUpdateToIMClient(self.helpMessage)
-				#send user help specs
-			elif self.serverShutdown(messageIn):
-				self.chatRoomHandler.shutdownClients()
-				newMessage = ""
-		else:
-			newMessage = clientName + " : " + messageIn
-			self.curChat.messageQueue.put(newMessage)
-			print "(%s) %s" % (self.curChat.name, newMessage)
 
