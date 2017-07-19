@@ -10,3 +10,5 @@ Chat commands:
 /switch <chatroom> to switch chatrooms
 
 /servershutdown to shutdown the server
+
+/exit will make the client exit
