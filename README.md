@@ -2,7 +2,7 @@
 Chat client and server
 
 Chat commands
-/help to display help
+/help to display commands
 
 /users to list all the users
 
