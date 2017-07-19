@@ -18,7 +18,13 @@ class Client:
 		self.name = name
 		self.chatRoomHandler = chatRoomHandler
 		self.startLoop()
-		self.helpMessage = "/help - will provide the possible command | /switch chatroomName - switch to given chatroomName | Chat Rooms Available : General and Random"
+		self.helpMessage = "/help - will provide the possible command \n" \
+						   "/switch chatroomName - switch to given chatroomName \n" \
+						   "Chat Rooms Available : General and Random \n" \
+						   "/users will list all users in your current chatroom\n" \
+						   "/servershutdown will shutdown the server after a countdown\n" \
+						   "/a during server shutdown countdown will abort\n" \
+						   "/exit will make the client exit"
 
 	# TODO Changed name of this as well
 	def listenForMessageFromIMClient(self):
