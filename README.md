@@ -11,4 +11,7 @@ Chat commands:
 
 /servershutdown to shutdown the server
 
+/a will abort the shutdown during the countdown but the '/' and 'a' might be split by the numbers printing out
+
 /exit will make the client exit
+
