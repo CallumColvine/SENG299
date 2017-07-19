@@ -25,6 +25,10 @@ class Client:
 		while True:
 			receive = select.select([self.sock], [], [])
 			message = self.sock.recv(4096)
+			# This occurs when the client shutsdown unexpectedly
+			if len(message) is 0:
+				self.chatroom.removeClient(self)
+				return
 			Thread(target=self.writeMessageToChatRoom, args=(message,)).start()
 
 	def startLoop(self):
@@ -47,6 +51,12 @@ class Client:
 				self.chatRoomHandler.shutdownClients()
 			elif self.requestingUsers(messageIn):
 				self.chatroom.listUsers(self)
+			elif self.exitMessage(messageIn):
+				self.shutdown()
+				self.chatroom.removeClient(self)
+				return
+			else:
+				self.sendMessageUpdateToIMClient("Sorry your command wasn't recognized")
 		else:
 			newMessage = self.name + " : " + messageIn
 			self.chatroom.messageQueue.put(newMessage)
@@ -91,6 +101,10 @@ class Client:
 
 	def requestingUsers(self, message):
 		if message.split(" ")[0] == "/users":
+			return True
+
+	def exitMessage(selfs, message):
+		if message.split(" ")[0] == "/exit":
 			return True
 
 
