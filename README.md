@@ -1,7 +1,8 @@
 # SENG299
 Chat client and server
 
-Chat commands
+Chat commands:
+
 /help to display commands
 
 /users to list all the users
