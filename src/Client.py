@@ -37,6 +37,7 @@ class Client:
 	# TODO I updated the name of this to be clearer
 	def writeMessageToChatRoom(self, messageIn):
 		newMessage = ""
+		# TODO Make this clearer with a switch statement
 		if self.specialMessage(messageIn):
 			if self.userJoining(messageIn):
 				newMessage = self.name + self.ignoreFirstWord(messageIn)
@@ -49,12 +50,18 @@ class Client:
 			# send user help specs
 			elif self.serverShutdown(messageIn):
 				self.chatRoomHandler.shutdownClients()
+				if self.chatRoomHandler.shuttingDown == False:
+					self.sendMessageUpdateToIMClient("Your shutdown command has been cancelled")
 			elif self.requestingUsers(messageIn):
 				self.chatroom.listUsers(self)
 			elif self.exitMessage(messageIn):
 				self.shutdown()
 				self.chatroom.removeClient(self)
 				return
+			elif self.abortMessage(messageIn):
+				self.chatRoomHandler.shuttingDown = False
+
+			# Default
 			else:
 				self.sendMessageUpdateToIMClient("Sorry your command wasn't recognized")
 		else:
@@ -107,4 +114,6 @@ class Client:
 		if message.split(" ")[0] == "/exit":
 			return True
 
-
+	def abortMessage(selfs, message):
+		if message.split(" ")[0] == "/a":
+			return True

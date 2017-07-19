@@ -57,9 +57,3 @@ class ChatRoom:
 			messToBroadcast = self.messageQueue.get()
 			self.updateConnectedClients(messToBroadcast)
 		return
-
-
-
-
-
-
