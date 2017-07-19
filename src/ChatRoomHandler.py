@@ -54,6 +54,8 @@ class ChatRoomHandler(object):
 			for chatroom in self.chatRoomList:
 				chatroom.messageQueue.put(str(i) + "...")
 			if self.shuttingDown == False:
+				for chatroom in self.chatRoomList:
+					chatroom.messageQueue.put("Server shutdown has been cancelled")
 				return
 			time.sleep(1)
 		for chatroom in self.chatRoomList:

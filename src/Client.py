@@ -50,8 +50,6 @@ class Client:
 			# send user help specs
 			elif self.serverShutdown(messageIn):
 				self.chatRoomHandler.shutdownClients()
-				if self.chatRoomHandler.shuttingDown == False:
-					self.sendMessageUpdateToIMClient("Your shutdown command has been cancelled")
 			elif self.requestingUsers(messageIn):
 				self.chatroom.listUsers(self)
 			elif self.exitMessage(messageIn):
