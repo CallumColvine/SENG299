@@ -6,6 +6,7 @@ class ChatRoomHandler(object):
 
 	def __init__(self):	
 		self.chatRoomList = []
+		self.shuttingDown = False
 		self.initChatRooms()
 
 	def initChatRooms(self):
@@ -46,11 +47,16 @@ class ChatRoomHandler(object):
 		return room
 
 	def shutdownClients(self):
+		self.shuttingDown = True
 		for chatroom in self.chatRoomList:
 			chatroom.messageQueue.put("Server shutting down")
 		for i in xrange(10, 0, -1):
 			for chatroom in self.chatRoomList:
 				chatroom.messageQueue.put(str(i) + "...")
+			if self.shuttingDown == False:
+				for chatroom in self.chatRoomList:
+					chatroom.messageQueue.put("Server shutdown has been cancelled")
+				return
 			time.sleep(1)
 		for chatroom in self.chatRoomList:
 			for client in chatroom.clientsConnected:

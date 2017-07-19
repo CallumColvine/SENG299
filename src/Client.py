@@ -14,17 +14,27 @@ class Client:
 
 		self.sock = sock
 		self.addr = addr
-		self.curChat = room # I dont know if this is entirely valid
+		self.chatroom = room # I dont know if this is entirely valid
 		self.name = name
 		self.chatRoomHandler = chatRoomHandler
 		self.startLoop()
-		self.helpMessage = "/help - will provide the possible command | /switch chatroomName - switch to given chatroomName | Chat Rooms Available : General and Random"
+		self.helpMessage = "/help - will provide the possible command \n" \
+						   "/switch chatroomName - switch to given chatroomName \n" \
+						   "Chat Rooms Available : General and Random \n" \
+						   "/users will list all users in your current chatroom\n" \
+						   "/servershutdown will shutdown the server after a countdown\n" \
+						   "/a during server shutdown countdown will abort\n" \
+						   "/exit will make the client exit"
 
 	# TODO Changed name of this as well
 	def listenForMessageFromIMClient(self):
 		while True:
 			receive = select.select([self.sock], [], [])
 			message = self.sock.recv(4096)
+			# This occurs when the client shutsdown unexpectedly
+			if len(message) is 0:
+				self.chatroom.removeClient(self)
+				return
 			Thread(target=self.writeMessageToChatRoom, args=(message,)).start()
 
 	def startLoop(self):
@@ -33,6 +43,7 @@ class Client:
 	# TODO I updated the name of this to be clearer
 	def writeMessageToChatRoom(self, messageIn):
 		newMessage = ""
+		# TODO Make this clearer with a switch statement
 		if self.specialMessage(messageIn):
 			if self.userJoining(messageIn):
 				newMessage = self.name + self.ignoreFirstWord(messageIn)
@@ -45,11 +56,22 @@ class Client:
 			# send user help specs
 			elif self.serverShutdown(messageIn):
 				self.chatRoomHandler.shutdownClients()
-				newMessage = ""
+			elif self.requestingUsers(messageIn):
+				self.chatroom.listUsers(self)
+			elif self.exitMessage(messageIn):
+				self.shutdown()
+				self.chatroom.removeClient(self)
+				return
+			elif self.abortMessage(messageIn):
+				self.chatRoomHandler.shuttingDown = False
+
+			# Default
+			else:
+				self.sendMessageUpdateToIMClient("Sorry your command wasn't recognized")
 		else:
 			newMessage = self.name + " : " + messageIn
-			self.curChat.messageQueue.put(newMessage)
-			print "(%s) %s" % (self.curChat.name, newMessage)
+			self.chatroom.messageQueue.put(newMessage)
+			print "(%s) %s" % (self.chatroom.name, newMessage)
 
 	# TODO I updated the name of this as well and it doesn't return anything as well
 	def sendMessageUpdateToIMClient(self, newMessage):
@@ -60,8 +82,8 @@ class Client:
 		self.sendMessageUpdateToIMClient("/exit")
 
 	def changeChatRoom(self, newRoomName):
-		newRoom = self.chatRoomHandler.changeChatRoom(newRoomName, self.curChat.name, self)
-		self.curChat = newRoom
+		newRoom = self.chatRoomHandler.changeChatRoom(newRoomName, self.chatroom.name, self)
+		self.chatroom = newRoom
 		return
 
 	def serverShutdown(self, message):
@@ -88,4 +110,14 @@ class Client:
 		if message.split(" ")[0] == "/announce":
 			return True
 
+	def requestingUsers(self, message):
+		if message.split(" ")[0] == "/users":
+			return True
 
+	def exitMessage(selfs, message):
+		if message.split(" ")[0] == "/exit":
+			return True
+
+	def abortMessage(selfs, message):
+		if message.split(" ")[0] == "/a":
+			return True
