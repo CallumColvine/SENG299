@@ -43,6 +43,7 @@ class Client:
 	# TODO I updated the name of this to be clearer
 	def writeMessageToChatRoom(self, messageIn):
 		newMessage = ""
+		saveMessage = self.chatroom.name + " : " + self.name + " : " + messageIn	
 		# TODO Make this clearer with a switch statement
 		if self.specialMessage(messageIn):
 			if self.userJoining(messageIn):
@@ -72,6 +73,12 @@ class Client:
 			newMessage = self.name + " : " + messageIn
 			self.chatroom.messageQueue.put(newMessage)
 			print "(%s) %s" % (self.chatroom.name, newMessage)
+
+		#newMessage = self.chatroom.name + " : " + self.name + " : " + messageIn	
+		text_file = open("server.txt", "a")
+		text_file.write(saveMessage + "\n")
+		text_file.close()
+  
 
 	# TODO I updated the name of this as well and it doesn't return anything as well
 	def sendMessageUpdateToIMClient(self, newMessage):

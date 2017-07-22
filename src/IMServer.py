@@ -18,6 +18,9 @@ class IMServer:
 		# I changed this into a dict so that it could be something like this general:General's Chatroom Object
 		# ToDo: Delete when sure it unnecessary
 		# self.chatRooms = {}
+		text_file = open("server.txt", "w")
+		text_file.write("")
+		text_file.close()
 		self.clientAdjectivesList = open('Adjectives.txt').read().splitlines()
 		self.clientNounsList = open('Nouns.txt').read().splitlines()
 		self.connectedClients = []

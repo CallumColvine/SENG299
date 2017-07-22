@@ -1,4 +1,3 @@
-#!/usr/bin/env python3 
 
 """ Initializes connections with IMServer with initConnection()
 These connections are passed on to a Client object which is managed by IMServer  """
