@@ -18,7 +18,6 @@ class IMClient:
 		self.port = 12345
 		self.sock = None # TODO Update design documents to show this variable
 		self.initConnection()
-		self.announce()
 		self.startLoop()
 
 	def initConnection(self):
@@ -37,9 +36,6 @@ class IMClient:
 
 		print 'Socket Connected to ' + self.host #+ ' on ip ' + remote_ip
 		return True
-
-	def announce(self):
-		self.sock.sendall("/announce " + self.username + " has connected to the chat room")
 	
 	def updateChat(self, newMessage):
 		if len(newMessage) > 0:

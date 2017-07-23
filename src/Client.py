@@ -43,12 +43,10 @@ class Client:
 	# TODO I updated the name of this to be clearer
 	def writeMessageToChatRoom(self, messageIn):
 		newMessage = ""
-		saveMessage = self.chatroom.name + " : " + self.name + " : " + messageIn	
+		saveMessage = "(" + self.chatroom.name + ") " + self.name + " : " + messageIn	
 		# TODO Make this clearer with a switch statement
 		if self.specialMessage(messageIn):
-			if self.userJoining(messageIn):
-				newMessage = self.name + self.ignoreFirstWord(messageIn)
-			elif self.switchCommand(messageIn):
+			if self.switchCommand(messageIn):
 				chat = messageIn.split(" ")[1]
 				if self.chatRoomHandler.findChatRoom(chat).name == chat:
 					self.changeChatRoom(chat)
